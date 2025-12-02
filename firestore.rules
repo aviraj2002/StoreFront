@@ -1,0 +1,215 @@
+/**
+ * Core Philosophy: This ruleset implements a multi-tenant e-commerce model.
+ * It ensures that:
+ * 1. Users have exclusive control over their personal profile data.
+ * 2. Store owners have exclusive control over their stores and associated products.
+ * 3. Customers can only manage and view their own orders.
+ * 4. Store owners can view and manage orders placed with their store.
+ * 5. General store and product information is publicly readable to support browsing.
+ *
+ * Data Structure: The database uses a flat, top-level collection structure.
+ * - /users/{userId}: Private user profiles.
+ * - /stores/{storeId}: Publicly readable store data, owned by a specific user.
+ * - /products/{productId}: Publicly readable product data, linked to a store.
+ * - /orders/{orderId}: Private order data, accessible only by the customer and the relevant store owner.
+ *
+ * Key Security Decisions:
+ * - User Listing Disabled: To protect user privacy, it is not possible to list all documents in the /users collection.
+ * - Admin Roles: The `role` field in user documents is defined but not yet used for authorization. All rules are based on document ownership. Admin capabilities can be added later.
+ * - Inferred Ownership: Product write access is determined by the ownership of the parent store it belongs to. This requires a `get()` call to the `/stores` collection, which is a necessary trade-off for the flat data structure.
+ * - Dual Order Access: An order is accessible by both the `userId` who created it and the owner of the `storeId` it was placed with, but their permissions differ (e.g., only the store owner can update status).
+ *
+ * Denormalization for Authorization:
+ * - The `stores` collection contains an `ownerId` field to directly link a store to its owner, enabling simple ownership checks for writes.
+ * - The `orders` collection contains both a `userId` and a `storeId`. This denormalization is crucial for allowing both the customer and the store owner to access the order document without complex queries or additional `get()` calls in many cases.
+ *
+ * Structural Segregation:
+ * - Public data (stores, products) and private data (users, orders) are stored in separate top-level collections. This provides a clear security boundary and enables safe, efficient public listing of browsable content.
+ */
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // --------------------------------------------------------------------
+    // Helper Functions
+    // --------------------------------------------------------------------
+
+    /**
+     * Returns true if the user is authenticated.
+     */
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    /**
+     * Returns true if the authenticated user's UID matches the provided userId.
+     * This is the primary function for checking document ownership.
+     */
+    function isOwner(userId) {
+      return request.auth.uid == userId;
+    }
+
+    /**
+     * Checks if the authenticated user is the owner of a given store.
+     * Requires reading the store document.
+     */
+    function isStoreOwner(storeId) {
+      return get(/databases/$(database)/documents/stores/$(storeId)).data.ownerId == request.auth.uid;
+    }
+
+    /**
+     * Checks if the user is the one who created a given order.
+     */
+    function isOrderUser(orderData) {
+      return orderData.userId == request.auth.uid;
+    }
+
+    /**
+     * Checks if the user is the owner of the store associated with a given order.
+     * Requires reading the store document.
+     */
+    function isOrderStoreOwner(orderData) {
+      return isStoreOwner(orderData.storeId);
+    }
+    
+    // --------------------------------------------------------------------
+    // Validation Functions (Authorization & Relational Integrity)
+    // --------------------------------------------------------------------
+
+    /**
+     * Validates that the ID in the new user document matches the document's path ID.
+     */
+    function isNewUserValid(userId, data) {
+      return data.id == userId;
+    }
+
+    /**
+     * Enforces that the user ID field cannot be changed on update.
+     */
+    function isUserUpdateValid(data) {
+      return data.id == resource.data.id;
+    }
+
+    /**
+     * Validates that the creator of a new store is assigning ownership to themselves.
+     */
+    function isNewStoreValid(data) {
+      return data.ownerId == request.auth.uid;
+    }
+
+    /**
+     * Enforces that the store's ownerId field cannot be changed on update.
+     */
+    function isStoreUpdateValid(data) {
+      return data.ownerId == resource.data.ownerId;
+    }
+    
+    /**
+     * Enforces that the product's storeId field cannot be changed on update.
+     */
+    function isProductUpdateValid(data) {
+        return data.storeId == resource.data.storeId;
+    }
+    
+    /**
+     * Validates that the creator of a new order is assigning it to themselves.
+     */
+    function isNewOrderValid(data) {
+      return data.userId == request.auth.uid;
+    }
+    
+    /**
+     * Enforces that the order's userId field cannot be changed on update.
+     */
+    function isOrderUpdateValid(data) {
+      return data.userId == resource.data.userId;
+    }
+
+    // --------------------------------------------------------------------
+    // Collection: users
+    // --------------------------------------------------------------------
+
+    /**
+     * @description Controls access to user profile documents.
+     * @path /users/{userId}
+     * @allow (get, update, delete) A user with auth.uid 'user123' can access their own document at /users/user123.
+     * @allow (create) A new user with auth.uid 'user456' can create their profile at /users/user456.
+     * @deny (get) A user with auth.uid 'user123' cannot read another user's document at /users/user456.
+     * @deny (list) No user, authenticated or not, can list all documents in the /users collection.
+     * @principle Restricts access to a user's own data tree.
+     */
+    match /users/{userId} {
+      allow get: if isOwner(userId);
+      allow list: if false;
+      allow create: if isOwner(userId) && isNewUserValid(userId, request.resource.data);
+      allow update: if isOwner(userId) && resource != null && isUserUpdateValid(request.resource.data);
+      allow delete: if isOwner(userId) && resource != null;
+    }
+
+    // --------------------------------------------------------------------
+    // Collection: stores
+    // --------------------------------------------------------------------
+
+    /**
+     * @description Controls access to store documents. Stores are public to read but private to write.
+     * @path /stores/{storeId}
+     * @allow (get, list) Any user, including unauthenticated users, can read store information.
+     * @allow (create) An authenticated user can create a new store, becoming its owner.
+     * @allow (update, delete) The user whose UID is in the store's `ownerId` field can modify or delete it.
+     * @deny (update) A user cannot update a store if their UID does not match the `ownerId` field.
+     * @principle Enforces public read access with strict document ownership for writes.
+     */
+    match /stores/{storeId} {
+      allow get: if true;
+      allow list: if true;
+      allow create: if isSignedIn() && isNewStoreValid(request.resource.data);
+      allow update: if resource != null && isOwner(resource.data.ownerId) && isStoreUpdateValid(request.resource.data);
+      allow delete: if resource != null && isOwner(resource.data.ownerId);
+    }
+
+    // --------------------------------------------------------------------
+    // Collection: products
+    // --------------------------------------------------------------------
+
+    /**
+     * @description Controls access to product documents. Products are public to read. Writes are restricted to the owner of the parent store.
+     * @path /products/{productId}
+     * @allow (get, list) Any user, including unauthenticated users, can read product information.
+     * @allow (create) A user can create a product if they own the store specified in the product's `storeId` field.
+     * @allow (update, delete) A user can update or delete a product if they own the store it belongs to.
+     * @deny (create) A user cannot create a product for a store they do not own.
+     * @principle Enforces write access based on ownership of a related document, requiring a get() call.
+     */
+    match /products/{productId} {
+      allow get: if true;
+      allow list: if true;
+      allow create: if isSignedIn() && isStoreOwner(request.resource.data.storeId);
+      allow update: if resource != null && isStoreOwner(resource.data.storeId) && isProductUpdateValid(request.resource.data);
+      allow delete: if resource != null && isStoreOwner(resource.data.storeId);
+    }
+
+    // --------------------------------------------------------------------
+    // Collection: orders
+    // --------------------------------------------------------------------
+
+    /**
+     * @description Controls access to order documents. Orders are private, accessible only by the buyer and the store owner.
+     * @path /orders/{orderId}
+     * @allow (get) The user who created the order or the owner of the store can read the order.
+     * @allow (list) A user can list their own orders (`where('userId', '==', auth.uid)`), or a store owner can list their store's orders (`where('storeId', '==', storeId)`).
+     * @allow (create) A signed-in user can create an order for themselves.
+     * @allow (update) Only the store owner can update an order (e.g., to change its status).
+     * @allow (delete) Only the user who placed the order can delete it (e.g., cancel it).
+     * @deny (get) An arbitrary user cannot read an order they did not create or that is not for their store.
+     * @deny (list) No user can perform a global list of all orders.
+     * @principle Enforces shared access between two parties (buyer and seller) with different permissions.
+     */
+    match /orders/{orderId} {
+      allow get: if isSignedIn() && (isOrderUser(resource.data) || isOrderStoreOwner(resource.data));
+      allow list: if isSignedIn() && (request.query.get('userId', '') == request.auth.uid || (request.query.get('storeId', '') != '' && isStoreOwner(request.query.get('storeId', ''))));
+      allow create: if isSignedIn() && isNewOrderValid(request.resource.data);
+      allow update: if resource != null && isSignedIn() && isOrderStoreOwner(resource.data) && isOrderUpdateValid(request.resource.data);
+      allow delete: if resource != null && isSignedIn() && isOrderUser(resource.data);
+    }
+  }
+}

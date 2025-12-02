@@ -1,0 +1,292 @@
+{
+  "entities": {
+    "User": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "User",
+      "type": "object",
+      "description": "Represents a user in the system.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the user entity."
+        },
+        "name": {
+          "type": "string",
+          "description": "The user's full name."
+        },
+        "email": {
+          "type": "string",
+          "description": "The user's email address.",
+          "format": "email"
+        },
+        "role": {
+          "type": "string",
+          "description": "The user's role (admin, store_owner, user)."
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp indicating when the user was created.",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Timestamp indicating when the user was last updated.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "email",
+        "role",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "Store": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Store",
+      "type": "object",
+      "description": "Represents a store in the system.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the store entity."
+        },
+        "ownerId": {
+          "type": "string",
+          "description": "Reference to User. (Relationship: User 1:N Store)"
+        },
+        "storeName": {
+          "type": "string",
+          "description": "The name of the store."
+        },
+        "category": {
+          "type": "string",
+          "description": "The category of the store."
+        },
+        "rating": {
+          "type": "number",
+          "description": "The store's rating."
+        },
+        "address": {
+          "type": "string",
+          "description": "The store's address."
+        },
+        "storeEmail": {
+          "type": "string",
+          "description": "The store's email address.",
+          "format": "email"
+        },
+        "imageURL": {
+          "type": "string",
+          "description": "URL of the store's image."
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp indicating when the store was created.",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Timestamp indicating when the store was last updated.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "ownerId",
+        "storeName",
+        "category",
+        "rating",
+        "address",
+        "storeEmail",
+        "imageURL",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "Product": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Product",
+      "type": "object",
+      "description": "Represents a product in the system.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the product entity."
+        },
+        "storeId": {
+          "type": "string",
+          "description": "Reference to Store. (Relationship: Store 1:N Product)"
+        },
+        "productName": {
+          "type": "string",
+          "description": "The name of the product."
+        },
+        "description": {
+          "type": "string",
+          "description": "The description of the product."
+        },
+        "price": {
+          "type": "number",
+          "description": "The price of the product."
+        },
+        "imageURL": {
+          "type": "string",
+          "description": "URL of the product's image."
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp indicating when the product was created.",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Timestamp indicating when the product was last updated.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "storeId",
+        "productName",
+        "description",
+        "price",
+        "imageURL",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "Order": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Order",
+      "type": "object",
+      "description": "Represents an order in the system.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the order entity."
+        },
+        "userId": {
+          "type": "string",
+          "description": "Reference to User. (Relationship: User 1:N Order)"
+        },
+        "storeId": {
+          "type": "string",
+          "description": "Reference to Store. (Relationship: Store 1:N Order)"
+        },
+        "items": {
+          "type": "array",
+          "description": "Array of order items, each containing product ID, quantity, and price.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "totalAmount": {
+          "type": "number",
+          "description": "The total amount of the order."
+        },
+        "status": {
+          "type": "string",
+          "description": "The status of the order (pending, confirmed, shipped, delivered)."
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp indicating when the order was created.",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Timestamp indicating when the order was last updated.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "userId",
+        "storeId",
+        "items",
+        "totalAmount",
+        "status",
+        "createdAt",
+        "updatedAt"
+      ]
+    }
+  },
+  "auth": {
+    "providers": [
+      "password",
+      "anonymous"
+    ]
+  },
+  "firestore": {
+    "structure": [
+      {
+        "path": "/users/{userId}",
+        "definition": {
+          "entityName": "User",
+          "schema": {
+            "$ref": "#/backend/entities/User"
+          },
+          "description": "Stores user profiles.  Includes user 'role' for authorization.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier of the user."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/stores/{storeId}",
+        "definition": {
+          "entityName": "Store",
+          "schema": {
+            "$ref": "#/backend/entities/Store"
+          },
+          "description": "Stores store details.",
+          "params": [
+            {
+              "name": "storeId",
+              "description": "The unique identifier of the store."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/products/{productId}",
+        "definition": {
+          "entityName": "Product",
+          "schema": {
+            "$ref": "#/backend/entities/Product"
+          },
+          "description": "Stores product information.",
+          "params": [
+            {
+              "name": "productId",
+              "description": "The unique identifier of the product."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/orders/{orderId}",
+        "definition": {
+          "entityName": "Order",
+          "schema": {
+            "$ref": "#/backend/entities/Order"
+          },
+          "description": "Stores order information.",
+          "params": [
+            {
+              "name": "orderId",
+              "description": "The unique identifier of the order."
+            }
+          ]
+        }
+      }
+    ],
+    "reasoning": "The Firestore data structure is designed to support the StoreFront application's features, including user authentication, store and product management, order placement, and data dashboards, while adhering to the principles of Authorization Independence, Clarity of Intent, DBAC (Database-Based Access Control), and QAPs (Rules Are Not Filters). It uses structural segregation to ensure all documents in a collection share the same security requirements and applies consistent access modeling for authorization.\n\n1.  **Authorization Independence:** The structure avoids hierarchical authorization dependencies by not relying on `get()` calls in security rules. For instance, stores and products are located under the user's document, avoiding the need to fetch user data to authorize store/product access.\n\n2.  **Clarity of Intent:** The structure makes authorization intent explicit through path-based ownership and membership maps. For example, stores and products are organized under `/users/{userId}` indicating ownership, clarifying the intent that only the owner can modify them.\n\n3.  **DBAC (No Custom Claims):** Roles are stored in the database (within the user document) rather than using custom claims. Authorization relies solely on `request.auth.uid` and data within Firestore.\n\n4.  **QAPs (Rules are not Filters):** The structure enables secure `list` operations. By segregating data based on ownership (e.g., `/users/{userId}/stores/{storeId}`), listing operations can be securely scoped to the authenticated user without filtering based on document content.\n\n5.  **Invariants:** The structure supports the integrity of ownership, timestamps, and denormalized data. Ownership is enforced through path-based access control, and timestamps (`createdAt`, `updatedAt`) ensure data consistency.\n\n**Explanation of Collections and Documents:**\n\n*   **/users/{userId}:** Stores user profiles. The `role` field within each document determines the user's privileges (admin, store_owner, user). This collection leverages path-based ownership for private user data. This approach makes security rules straightforward because access control can be based directly on the `userId` in the path.\n\n*   **/stores/{storeId}:** Stores details for each store. Documents contain information such as `storeName`, `category`, `rating`, `address`, `storeEmail`, and `imageURL`. The `ownerId` field references the user who owns the store, enforcing ownership invariants. This collection is separate, to avoid mixing store data with different access needs (e.g., public vs. private stores).\n\n*   **/products/{productId}:** Contains product information. Each document includes `storeId`, `productName`, `description`, `price`, and `imageURL`. The `storeId` field links back to the store, establishing a store-product relationship.\n\n*   **/orders/{orderId}:** Stores order information. Each document includes `userId`, `storeId`, `items`, `totalAmount`, and `status`. The `userId` field references the user who placed the order, creating a user-order relationship."
+  }
+}
