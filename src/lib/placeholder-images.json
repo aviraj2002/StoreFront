@@ -1,3 +1,76 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "store-books",
+      "description": "A cozy bookstore with shelves full of books.",
+      "imageUrl": "https://images.unsplash.com/photo-1727342681676-b7b32b273add?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxib29rc3RvcmUlMjBpbnRlcmlvcnxlbnwwfHx8fDE3NjQ1NzM5OTV8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "bookstore interior"
+    },
+    {
+      "id": "store-electronics",
+      "description": "A modern electronics store displaying latest gadgets.",
+      "imageUrl": "https://images.unsplash.com/photo-1498049794561-7780e7231661?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxlbGVjdHJvbmljcyUyMHN0b3JlfGVufDB8fHx8MTc2NDYyMjIwMnww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "electronics store"
+    },
+    {
+      "id": "store-clothing",
+      "description": "A stylish clothing boutique with racks of apparel.",
+      "imageUrl": "https://images.unsplash.com/photo-1761682719767-36b43e4acd63?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxjbG90aGluZyUyMGJvdXRpcXVlfGVufDB8fHx8MTc2NDY2Njk5NXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "clothing boutique"
+    },
+    {
+      "id": "store-bakery",
+      "description": "A warm bakery with fresh bread and pastries.",
+      "imageUrl": "https://images.unsplash.com/photo-1728651028766-4ae2bfb49e56?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxiYWtlcnklMjBkaXNwbGF5fGVufDB8fHx8MTc2NDY2Njk5NXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "bakery display"
+    },
+    {
+      "id": "product-laptop",
+      "description": "A sleek, modern laptop on a clean desk.",
+      "imageUrl": "https://images.unsplash.com/photo-1759661142441-d77ffb3ca943?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8bW9kZXJuJTIwbGFwdG9wfGVufDB8fHx8MTc2NDU5NTM5NHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "modern laptop"
+    },
+    {
+      "id": "product-headphones",
+      "description": "High-quality wireless headphones.",
+      "imageUrl": "https://images.unsplash.com/photo-1612465289702-7c84b5258fde?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHx3aXJlbGVzcyUyMGhlYWRwaG9uZXN8ZW58MHx8fHwxNzY0NjQ4OTQwfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "wireless headphones"
+    },
+    {
+      "id": "product-book",
+      "description": "A hardcover book with an intriguing cover.",
+      "imageUrl": "https://images.unsplash.com/photo-1621944192380-808416c390e2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxoYXJkY292ZXIlMjBib29rfGVufDB8fHx8MTc2NDY2Njk5NXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "hardcover book"
+    },
+    {
+      "id": "product-tshirt",
+      "description": "A plain cotton t-shirt folded neatly.",
+      "imageUrl": "https://images.unsplash.com/photo-1643286131725-5e0ad3b3ca02?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxjb3R0b24lMjB0LXNoaXJ0fGVufDB8fHx8MTc2NDYwMjc0Nnww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "cotton t-shirt"
+    },
+    {
+      "id": "product-coffee",
+      "description": "A bag of artisanal coffee beans.",
+      "imageUrl": "https://images.unsplash.com/photo-1675306408031-a9aad9f23308?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxjb2ZmZWUlMjBiZWFuc3xlbnwwfHx8fDE3NjQ2MzUyNzR8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "coffee beans"
+    },
+    {
+      "id": "product-camera",
+      "description": "A professional digital camera.",
+      "imageUrl": "https://images.unsplash.com/photo-1698502453332-03fa2ddceb71?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxkaWdpdGFsJTIwY2FtZXJhfGVufDB8fHx8MTc2NDY2Njk5NXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "digital camera"
+    },
+    {
+      "id": "product-watch",
+      "description": "A classic analog wristwatch.",
+      "imageUrl": "https://images.unsplash.com/photo-1673224993627-59b8819aeff8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxhbmFsb2clMjB3YXRjaHxlbnwwfHx8fDE3NjQ2NjY5OTV8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "analog watch"
+    },
+    {
+      "id": "product-croissant",
+      "description": "A buttery, flaky croissant.",
+      "imageUrl": "https://images.unsplash.com/photo-1737700089482-9fcec5d7c990?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8Zmxha3klMjBjcm9pc3NhbnR8ZW58MHx8fHwxNzY0NjY2OTk1fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "flaky croissant"
+    }
+  ]
 }
