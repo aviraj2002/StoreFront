@@ -1,154 +1,161 @@
-# Smart Task Analyzer — Internship Assignment 2025
+🚀 StoreFront — Modern Ecommerce Frontend (Internship Project)
 
-A mini-application that intelligently analyzes, scores, and prioritizes tasks using a custom-designed algorithm.
-This project was built as part of the Singularium Software Development Intern Assessment 2025.
+A modern, responsive ecommerce frontend built using Next.js, TypeScript, Tailwind CSS, and shadcn/ui components.
+This project was created as part of an internship assignment to demonstrate real-world application development, component structuring, routing, and UI/UX design skills.
 
-## 🚀 Features
-Backend (Django + DRF)
+🌟 Features
+🏬 Store Listing Page
 
-/api/tasks/analyze/ → Sort tasks by smart priority score
+Displays all stores in a responsive grid layout
 
-/api/tasks/suggest/ → Recommend top 3 tasks with reasons
+Store cards include:
 
-Scoring algorithm considers:
+Image
 
-Urgency
+Name
 
-Importance
+Category
 
-Estimated effort
+Rating
 
-Dependencies
+Smooth hover animations
 
-Multiple sorting strategies:
+Fully responsive UI
 
-Smart Balance (default)
+🏪 Dynamic Store Details Page
 
-Fastest Wins
+For every store:
 
-High Impact
+Details rendered dynamically using route:
 
-Deadline Driven
+/stores/[storeId]
 
-Frontend (HTML + CSS + JavaScript)
 
-Form to add tasks
+Store banner + info
 
-Paste JSON for bulk input
+Product list for that store
 
-Analyze tasks button (calls backend API)
+Clean layout for better shopping experience
 
-Color-coded priority indicators
+🛒 Product System
 
-Explanations for each task
+Product cards with image, price, and name
 
-Strategy dropdown selector
+Dynamic product fetching based on storeId
 
-Responsive UI (works on all screen sizes)
+Typescript typing ensures consistency and safety
 
-## 🧠 Algorithm Explanation (300–500 words)
+🎨 UI/UX Implementation
 
-The core of this application is the priority scoring algorithm, designed to evaluate tasks based on multiple competing factors: urgency, importance, effort, and dependencies. The goal is to help users understand which tasks should be completed first in a balanced and logical manner.
+Built with modern reusable components from shadcn/ui
 
-Urgency measures how soon a task is due. Tasks with a near or past due date receive higher urgency scores. Overdue tasks receive the maximum urgency weight because they represent critical items that require immediate attention.
+TailwindCSS for sleek layouts
 
-Importance is a user-defined value between 1 and 10. Tasks marked with higher importance contribute significantly to the final score. This helps users prioritize tasks that have greater impact or value.
+Hover effects, shadows, transitions
 
-Effort represents estimated hours needed to complete a task. Lower-effort tasks are treated as “quick wins” and are given a positive weight because they can be completed faster while improving productivity and momentum.
+Fully mobile-friendly interface
 
-Dependencies indicate whether completing a task unblocks other tasks. The more tasks that depend on it, the higher the score. This ensures that important blocker tasks rank higher.
+🧱 Tech Stack
 
-To improve flexibility, four different scoring strategies are implemented:
+Next.js 14 (App Router)
 
-Fastest Wins: Prioritizes tasks requiring the least effort.
+TypeScript
 
-High Impact: Focuses strongly on importance over all other factors.
+Tailwind CSS
 
-Deadline Driven: Emphasizes urgency and due dates.
+shadcn/ui Components
 
-Smart Balance: A balanced multi-factor strategy combining urgency, importance, effort, and dependencies.
+lucide-react Icons
 
-The algorithm also handles edge cases such as missing data, overdue tasks, and invalid values. This ensures reliability and realistic outputs. Additionally, the scoring logic is structured to be easily configurable so weights can be tuned or extended.
-
-Overall, the algorithm demonstrates critical thinking, clean logic design, and balanced decision-making in real-world task prioritization.
-
-## 📁 Project Structure
-task-analyzer/
-├── backend/
-│   ├── task_analyzer/
-│   ├── tasks/
-│   └── requirements.txt
-├── frontend/
-│   ├── index.html
-│   ├── styles.css
-│   └── script.js
+📁 Project Structure
+store-front/
+├── src/
+│   ├── app/
+│   │   ├── stores/
+│   │   │   ├── page.tsx
+│   │   │   └── [storeId]/page.tsx
+│   │   └── layout.tsx
+│   ├── components/
+│   │   ├── store/
+│   │   │   └── store-card.tsx
+│   │   ├── product/
+│   │   └── shared/
+│   └── lib/
+│       └── types.ts
 └── README.md
 
-## 🧪 Unit Tests
+🧪 Type Safety
 
-Includes 3+ backend test cases:
+Project uses strict TypeScript with well-defined entities:
 
-Score calculation returns a number
+🧷 Example Types Included:
 
-High importance > low importance
+Store
 
-Low effort preferred in Fastest Wins
+Product
 
-Run tests:
+User
 
-cd backend
-python manage.py test
+Order
 
-## 🛠 Setup Instructions
-Backend
-cd backend
-pip install -r requirements.txt
-python manage.py migrate
-python manage.py runserver
+CartItem
 
-Frontend
+This ensures reliable, predictable data across the app.
 
-Open:
+🛠️ How to Run the Project
+1. Install Dependencies
+npm install
 
-frontend/index.html
+2. Run the Development Server
+npm run dev
 
+3. Open in Browser
+http://localhost:3000
 
-(or run live server)
+✨ Time Breakdown
 
-## ⏳ Time Breakdown
+UI Components: 2 hours
 
-Algorithm design: 1 hour
+Routing + Dynamic Pages: 1 hour
 
-Backend API: 1 hour
+TypeScript Models: 20 min
 
-Frontend UI: 1 hour
+Styling + Layout: 1 hour
 
-Testing + Debugging: 30 min
+Debugging + Config Fixes: 40 min
 
-Documentation: 20 min
+Final Documentation: 15 min
 
-## 🔮 Future Improvements
+🚀 Future Enhancements
 
-Visual dependency graph
+Complete Cart & Checkout flow
 
-Eisenhower matrix chart
+Firebase Authentication (Login/Signup)
 
-Notification system
+Store Owner Dashboard
 
-User preference-based weighting
+Product Management System
 
-Database storage for persistent tasks
+Real backend API integration
 
-## 📌 Submission
+Search + Filters
 
-Please find all source code, unit tests, and documentation in this repository.
+Wishlist feature
 
-## 3. Professional Commit Messages (Use these):
-feat: add task model, serializer, and scoring engine
-feat: implement analyze and suggest API endpoints
-feat: add multi-strategy task scoring (4 modes)
-feat: create frontend UI with task form and JSON import
-feat: add strategy dropdown and priority badges
-test: add unit tests for scoring algorithm
-docs: add full README with algorithm explanation
-chore: project structure cleanup and optimization
+📌 Submission
+
+All source code, components, types, and routing are included and documented.
+This repository demonstrates frontend architecture, clean UI design, and component reusability.
+
+📝 Professional Commit Messages
+
+Use these for clean repo history:
+
+feat: create store listing page with responsive UI
+feat: implement dynamic store page using params
+feat: add store card component with image, rating and category
+feat: integrate product listing inside store page
+chore: fix TypeScript types and config errors
+style: improve UI spacing and hover animation
+refactor: clean folder structure and component naming
+docs: add professional README for GitHub
